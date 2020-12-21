@@ -6,6 +6,8 @@
         :items="usuarios"
         sort-by="nombre"
         class="elevation-1"
+        :loading="cargando"
+        loading-text="Carganado... Por favor espere."
       >
         <template v-slot:top>
           <v-toolbar flat>
@@ -32,7 +34,7 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="12" sm="6" md="4">
+                      <v-col cols="12" sm="6" md="5">
                         <v-text-field
                           v-model="editedItem.nombre"
                           label="Nombre"
@@ -40,13 +42,19 @@
                           required
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.email"
-                          :rules="emailRules"
-                          label="E-mail"
+                      <v-col cols="12" sm="6" md="7">
+                        <v-select
+                          v-model="editedItem.rol"
+                          ref="Rol"
+                          :rules="
+                            [() => !!roles || 'El rol es requerido'] &&
+                            textRules
+                          "
+                          :items="roles"
+                          label="Rol"
+                          placeholder="Seleccione..."
                           required
-                        ></v-text-field>
+                        ></v-select>
                       </v-col>
                       <template v-if="editedItem.estado === undefined">
                         <v-col cols="12">
@@ -65,15 +73,12 @@
                         </v-col>
                       </template>
                       <v-col cols="12">
-                        <v-autocomplete
-                          ref="Rol"
-                          v-model="editedItem.rol"
-                          :rules="[() => !!roles || 'This field is required']"
-                          :items="roles"
-                          label="Rol"
-                          placeholder="Select..."
+                        <v-text-field
+                          v-model="editedItem.email"
+                          :rules="emailRules"
+                          label="E-mail"
                           required
-                        ></v-autocomplete>
+                        ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -134,16 +139,13 @@
         </template>
       </v-data-table>
     </v-app>
-    <pre>
-    {{ $data.categorias }}
-  </pre
-    >
   </div>
 </template>
 <script>
 import axios from "axios";
 export default {
   data: () => ({
+    cargando: true,
     roles: ["Administrador", "Vendedor", "Almacenero", "Cliente"],
     show1: false,
     show2: true,
@@ -220,6 +222,7 @@ export default {
       axios
         .get("http://localhost:3000/api/usuario/list")
         .then((response) => {
+          this.cargando = false;
           this.usuarios = response.data;
         })
         .catch((error) => {

@@ -3,13 +3,13 @@
     <v-app>
       <v-data-table
         :headers="headers"
-        :items="categorias"
+        :items="usuarios"
         sort-by="nombre"
         class="elevation-1"
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Categorias</v-toolbar-title>
+            <v-toolbar-title>Usuario</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog" max-width="500px">
@@ -21,7 +21,7 @@
                   v-bind="attrs"
                   v-on="on"
                 >
-                  Agregar Categoria
+                  Agregar Usuario
                 </v-btn>
               </template>
               <v-card>
@@ -32,20 +32,48 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="12">
+                      <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.nombre"
                           label="Nombre"
+                          :rules="textRules"
+                          required
                         ></v-text-field>
                       </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.email"
+                          :rules="emailRules"
+                          label="E-mail"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <template v-if="editedItem.estado === undefined">
+                        <v-col cols="12">
+                          <v-text-field
+                            v-model="editedItem.password"
+                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            :rules="[rules.required, rules.min]"
+                            :type="show1 ? 'text' : 'password'"
+                            name="input-10-1"
+                            label="Introduzca la contraseña"
+                            hint="Al menos 8 caracteres"
+                            counter
+                            @click:append="show1 = !show1"
+                          >
+                          </v-text-field>
+                        </v-col>
+                      </template>
                       <v-col cols="12">
-                        <v-textarea
-                          v-model="editedItem.descripcion"
-                          label="Descripción"
-                          auto-grow
-                          no-resize
-                          counter="250"
-                        ></v-textarea>
+                        <v-autocomplete
+                          ref="Rol"
+                          v-model="editedItem.rol"
+                          :rules="[() => !!roles || 'This field is required']"
+                          :items="roles"
+                          label="Rol"
+                          placeholder="Select..."
+                          required
+                        ></v-autocomplete>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -67,13 +95,13 @@
                 <v-card-title class="headline">
                   <template v-if="editedItem.estado == 1"
                     ><p>
-                      ¿Realmente quiere desactivar la categoria
+                      ¿Realmente quiere desactivar el usuario
                       {{ editedItem.nombre }}
                     </p></template
                   >
                   <template v-else
                     ><p>
-                      ¿Realmente quiere activar la categoria
+                      ¿Realmente quiere activar el usuario
                       {{ editedItem.nombre }} ?
                     </p></template
                   >
@@ -97,8 +125,8 @@
             mdi-pencil
           </v-icon>
           <v-icon medium @click="deleteItem(item)">
-            <template v-if="item.estado">mdi-electric-switch-closed</template>
-            <template v-else>mdi-electric-switch</template>
+            <template v-if="item.estado">mdi-toggle-switch</template>
+            <template v-else>mdi-toggle-switch-off-outline</template>
           </v-icon>
         </template>
         <template v-slot:no-data>
@@ -116,39 +144,61 @@
 import axios from "axios";
 export default {
   data: () => ({
+    roles: ["Administrador", "Vendedor", "Almacenero", "Cliente"],
+    show1: false,
+    show2: true,
+    show3: false,
+    show4: false,
+    password: "Password",
+    rules: {
+      required: (value) => !!value || "Requirida",
+      min: (v) => v.length >= 8 || "Min 8 characters",
+      emailMatch: () => `The email and password you entered don't match`,
+    },
+    Nombre: "",
+    email: "",
+    textRules: [(v) => !!v || "Requerido"],
+    emailRules: [
+      (v) => !!v || "E-mail is required",
+      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+    ],
     dialog: false,
     dialogDelete: false,
     headers: [
       { text: "Id", value: "id" },
       {
-        text: "Categorias",
+        text: "Usuario",
         align: "start",
         sortable: true,
         value: "nombre",
       },
-      { text: "Descripción", value: "descripcion" },
+
+      { text: "Email", value: "email" },
+      { text: "Rol", value: "rol" },
       { text: "Estado", value: "estado" },
       ,
       { text: "Acción", value: "actions", sortable: false },
     ],
 
-    categorias: [],
+    usuarios: [],
     editedIndex: -1,
     editedItem: {
       nombre: "",
-      descripcion: "",
-      estado: 0,
+      email: "",
+      rol: "",
+      estado: undefined,
     },
     defaultItem: {
       nombre: "",
-      descripcion: "",
-      estado: 0,
+      email: "",
+      rol: "",
+      estado: undefined,
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Nueva Categoria" : "Editar categoria";
+      return this.editedIndex === -1 ? "Nuevo usuario" : "Editar usuario";
     },
   },
 
@@ -168,9 +218,9 @@ export default {
   methods: {
     list() {
       axios
-        .get("http://localhost:3000/api/categoria/list")
+        .get("http://localhost:3000/api/usuario/list")
         .then((response) => {
-          this.categorias = response.data;
+          this.usuarios = response.data;
         })
         .catch((error) => {
           console.log(error);
@@ -179,7 +229,9 @@ export default {
 
     editItem(item) {
       this.editedIndex = item.id;
+
       this.editedItem = Object.assign({}, item);
+
       this.dialog = true;
     },
 
@@ -192,7 +244,7 @@ export default {
     deleteItemConfirm() {
       if (this.editedItem.estado === 1) {
         axios
-          .put("http://localhost:3000/api/categoria/deactivate", {
+          .put("http://localhost:3000/api/usuario/deactivate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -203,7 +255,7 @@ export default {
           });
       } else {
         axios
-          .put("http://localhost:3000/api/categoria/activate", {
+          .put("http://localhost:3000/api/usuario/activate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -235,10 +287,11 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("http://localhost:3000/api/categoria/update", {
+          .put("http://localhost:3000/api/usuario/update", {
             id: this.editedItem.id,
             nombre: this.editedItem.nombre,
-            descripcion: this.editedItem.descripcion,
+            email: this.editedItem.email,
+            rol: this.editedItem.rol,
           })
           .then((response) => {
             this.list();
@@ -248,9 +301,11 @@ export default {
           });
       } else {
         axios
-          .post("http://localhost:3000/api/categoria/add", {
+          .post("http://localhost:3000/api/usuario/add", {
             nombre: this.editedItem.nombre,
-            descripcion: this.editedItem.descripcion,
+            email: this.editedItem.email,
+            password: this.editedItem.password,
+            rol: this.editedItem.rol,
             estado: 1,
           })
           .then((response) => {

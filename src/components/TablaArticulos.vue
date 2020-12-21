@@ -97,8 +97,8 @@
             mdi-pencil
           </v-icon>
           <v-icon medium @click="deleteItem(item)">
-            <template v-if="item.estado">mdi-electric-switch-closed</template>
-            <template v-else>mdi-electric-switch</template>
+            <template v-if="item.estado">mdi-toggle-switch</template>
+            <template v-else>mdi-toggle-switch-off-outline</template>
           </v-icon>
         </template>
         <template v-slot:no-data>

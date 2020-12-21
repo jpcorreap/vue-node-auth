@@ -3,13 +3,15 @@
     <v-app>
       <v-data-table
         :headers="headers"
-        :items="categorias"
+        :items="articulo"
         sort-by="nombre"
         class="elevation-1"
+        :loading="cargando"
+        loading-text="Carganado... Por favor espere."
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Categorias</v-toolbar-title>
+            <v-toolbar-title>Articulo</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog" max-width="500px">
@@ -21,7 +23,7 @@
                   v-bind="attrs"
                   v-on="on"
                 >
-                  Agregar Categoria
+                  Agregar Articulo
                 </v-btn>
               </template>
               <v-card>
@@ -34,9 +36,26 @@
                     <v-row>
                       <v-col cols="12">
                         <v-text-field
+                          v-model="editedItem.codigo"
+                          label="Código"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="5">
+                        <v-text-field
                           v-model="editedItem.nombre"
                           label="Nombre"
                         ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="7">
+                        <v-select
+                          v-model="categoria"
+                          label="Categoria"
+                          :items="categorias"
+                          item-text="nombre"
+                          item-value="id"
+                          return-object
+                        >
+                        </v-select>
                       </v-col>
                       <v-col cols="12">
                         <v-textarea
@@ -67,13 +86,13 @@
                 <v-card-title class="headline">
                   <template v-if="editedItem.estado == 1"
                     ><p>
-                      ¿Realmente quiere desactivar la categoria
+                      ¿Realmente quiere desactivar el articulo<br />
                       {{ editedItem.nombre }}
                     </p></template
                   >
                   <template v-else
                     ><p>
-                      ¿Realmente quiere activar la categoria
+                      ¿Realmente quiere activar el articulo<br />
                       {{ editedItem.nombre }} ?
                     </p></template
                   >
@@ -107,7 +126,7 @@
       </v-data-table>
     </v-app>
     <pre>
-    {{ $data.categorias }}
+    {{ $data.articulo }}
   </pre
     >
   </div>
@@ -116,39 +135,60 @@
 import axios from "axios";
 export default {
   data: () => ({
+    cargando: true,
     dialog: false,
     dialogDelete: false,
     headers: [
       { text: "Id", value: "id" },
+      { text: "Codigo", value: "codigo" },
       {
-        text: "Categorias",
+        text: "Articulo",
         align: "start",
         sortable: true,
         value: "nombre",
       },
       { text: "Descripción", value: "descripcion" },
+      { text: "Categoria", value: "Categoria.nombre" },
       { text: "Estado", value: "estado" },
       ,
       { text: "Acción", value: "actions", sortable: false },
     ],
 
+    articulo: [],
     categorias: [],
+    categoria: "",
+
     editedIndex: -1,
     editedItem: {
       nombre: "",
       descripcion: "",
       estado: 0,
+      codigo: "",
+      CategoriaId: {
+        nombre: "",
+        id: 0,
+      },
     },
     defaultItem: {
       nombre: "",
       descripcion: "",
       estado: 0,
+      codigo: "",
+      CategoriaId: {
+        nombre: "",
+        id: 0,
+      },
+    },
+
+    editCategoria: {
+      nombre: "",
+      id: "",
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Nueva Categoria" : "Editar categoria";
+      return this.editedIndex === -1 ? "Nuevo articulo" : "Editar articulo";
     },
   },
 
@@ -163,10 +203,23 @@ export default {
 
   created() {
     this.list();
+    this.listCategoria();
   },
 
   methods: {
     list() {
+      axios
+        .get("http://localhost:3000/api/articulo/list")
+        .then((response) => {
+          this.cargando = false;
+          this.articulo = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    listCategoria() {
       axios
         .get("http://localhost:3000/api/categoria/list")
         .then((response) => {
@@ -179,6 +232,7 @@ export default {
 
     editItem(item) {
       this.editedIndex = item.id;
+      this.categoria = item ? item.Categoria : "";
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
@@ -192,7 +246,7 @@ export default {
     deleteItemConfirm() {
       if (this.editedItem.estado === 1) {
         axios
-          .put("http://localhost:3000/api/categoria/deactivate", {
+          .put("http://localhost:3000/api/articulo/deactivate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -203,7 +257,7 @@ export default {
           });
       } else {
         axios
-          .put("http://localhost:3000/api/categoria/activate", {
+          .put("http://localhost:3000/api/articulo/activate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -220,6 +274,7 @@ export default {
       this.dialog = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
+        this.categoria = "";
         this.editedIndex = -1;
       });
     },
@@ -235,10 +290,12 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("http://localhost:3000/api/categoria/update", {
+          .put("http://localhost:3000/api/articulo/update", {
             id: this.editedItem.id,
             nombre: this.editedItem.nombre,
             descripcion: this.editedItem.descripcion,
+            codigo: this.editedItem.codigo,
+            categoriaId: this.categoria.id,
           })
           .then((response) => {
             this.list();
@@ -248,10 +305,12 @@ export default {
           });
       } else {
         axios
-          .post("http://localhost:3000/api/categoria/add", {
+          .post("http://localhost:3000/api/articulo/add", {
             nombre: this.editedItem.nombre,
             descripcion: this.editedItem.descripcion,
             estado: 1,
+            codigo: this.editedItem.codigo,
+            categoriaId: this.categoria.id,
           })
           .then((response) => {
             this.list();

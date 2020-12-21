@@ -6,6 +6,8 @@
         :items="categorias"
         sort-by="nombre"
         class="elevation-1"
+        :loading="cargando"
+        loading-text="Carganado... Por favor espere."
       >
         <template v-slot:top>
           <v-toolbar flat>
@@ -67,13 +69,13 @@
                 <v-card-title class="headline">
                   <template v-if="editedItem.estado == 1"
                     ><p>
-                      ¿Realmente quiere desactivar la categoria
+                      ¿Realmente quiere desactivar la categoria<br />
                       {{ editedItem.nombre }}
                     </p></template
                   >
                   <template v-else
                     ><p>
-                      ¿Realmente quiere activar la categoria
+                      ¿Realmente quiere activar la categoria<br />
                       {{ editedItem.nombre }} ?
                     </p></template
                   >
@@ -106,16 +108,13 @@
         </template>
       </v-data-table>
     </v-app>
-    <pre>
-    {{ $data.categorias }}
-  </pre
-    >
   </div>
 </template>
 <script>
 import axios from "axios";
 export default {
   data: () => ({
+    cargando: true,
     dialog: false,
     dialogDelete: false,
     headers: [
@@ -170,6 +169,7 @@ export default {
       axios
         .get("http://localhost:3000/api/categoria/list")
         .then((response) => {
+          this.cargando = false;
           this.categorias = response.data;
         })
         .catch((error) => {

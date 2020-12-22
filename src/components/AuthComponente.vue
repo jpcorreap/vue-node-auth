@@ -4,6 +4,12 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Sprint 5 - Grupo 1</v-toolbar-title>
+      <v-spacer>
+        <v-btn icon class="mr-5" @click="salir()"
+          ><v-icon>mdi-logout</v-icon>
+          <span>Salir</span>
+        </v-btn>
+      </v-spacer>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" fixed temporary>
@@ -64,6 +70,14 @@ export default {
       ["Articulo", "mdi-cog-outline", "Articulo"],
       ["Usuario", "mdi-account-multiple-outline", "Usuario"],
     ],
+    created() {
+      this.store.dispatch("autoLogin");
+    },
   }),
+  methods: {
+    salir() {
+      this.$store.dispatch("salir");
+    },
+  },
 };
 </script>

@@ -180,10 +180,10 @@ export default {
       },
     },
 
-    editCategoria: {
-      nombre: "",
-      id: "",
-    },
+    // editCategoria: {
+    //   nombre: "",
+    //   id: "",
+    // },
   }),
 
   computed: {

@@ -167,7 +167,11 @@ export default {
   methods: {
     list() {
       axios
-        .get("http://localhost:3000/api/categoria/list")
+        .get("http://localhost:3000/api/categoria/list", {
+          headers: {
+            token: this.$store.state.token,
+          },
+        })
         .then((response) => {
           this.cargando = false;
           this.categorias = response.data;

@@ -5,7 +5,7 @@
         :headers="headers"
         :items="usuarios"
         sort-by="nombre"
-        class="elevation-1"
+        class="elevation-20"
         :loading="cargando"
         loading-text="Carganado... Por favor espere."
       >
@@ -38,7 +38,6 @@
                         <v-text-field
                           v-model="editedItem.nombre"
                           label="Nombre"
-                          :rules="textRules"
                           required
                         ></v-text-field>
                       </v-col>
@@ -46,40 +45,35 @@
                         <v-select
                           v-model="editedItem.rol"
                           ref="Rol"
-                          :rules="
-                            [() => !!roles || 'El rol es requerido'] &&
-                            textRules
-                          "
                           :items="roles"
                           label="Rol"
                           placeholder="Seleccione..."
                           required
                         ></v-select>
                       </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          v-model="editedItem.email"
+                          label="E-mail"
+                          :rules="[rules.email]"
+                          required
+                        ></v-text-field>
+                      </v-col>
                       <template v-if="editedItem.estado === undefined">
                         <v-col cols="12">
                           <v-text-field
                             v-model="editedItem.password"
                             :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                            :rules="[rules.required, rules.min]"
+                            :rules="[rules.min]"
                             :type="show1 ? 'text' : 'password'"
                             name="input-10-1"
                             label="Introduzca la contraseña"
-                            hint="Al menos 8 caracteres"
                             counter
                             @click:append="show1 = !show1"
                           >
                           </v-text-field>
                         </v-col>
                       </template>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.email"
-                          :rules="emailRules"
-                          label="E-mail"
-                          required
-                        ></v-text-field>
-                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -148,22 +142,16 @@ export default {
     cargando: true,
     roles: ["Administrador", "Vendedor", "Almacenero", "Cliente"],
     show1: false,
-    show2: true,
-    show3: false,
-    show4: false,
+
     password: "Password",
     rules: {
-      required: (value) => !!value || "Requirida",
-      min: (v) => v.length >= 8 || "Min 8 characters",
-      emailMatch: () => `The email and password you entered don't match`,
+      min: (v) => v.length >= 6 || "Min 6 characters",
+      email: (value) => {
+        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return pattern.test(value) || "Invalid e-mail.";
+      },
     },
-    Nombre: "",
-    email: "",
-    textRules: [(v) => !!v || "Requerido"],
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-    ],
+
     dialog: false,
     dialogDelete: false,
     headers: [

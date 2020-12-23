@@ -10,8 +10,9 @@
         loading-text="Carganado... Por favor espere."
       >
         <template v-slot:top>
-          <v-toolbar flat>
-            <v-toolbar-title>Categorias</v-toolbar-title>
+          <v-toolbar flat
+            ><v-icon>mdi-select-group</v-icon>
+            <v-toolbar-title> Categorias</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog" max-width="500px">
@@ -23,6 +24,7 @@
                   v-bind="attrs"
                   v-on="on"
                 >
+                  <v-icon>mdi-plus</v-icon>
                   Agregar Categoria
                 </v-btn>
               </template>
@@ -86,7 +88,7 @@
                     >Cancelar</v-btn
                   >
                   <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                    >Si</v-btn
+                    >si</v-btn
                   >
                   <v-spacer></v-spacer>
                 </v-card-actions>
@@ -108,6 +110,7 @@
         </template>
       </v-data-table>
     </v-app>
+    <pre>{{ categorias }}</pre>
   </div>
 </template>
 <script>

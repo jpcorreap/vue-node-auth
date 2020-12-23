@@ -10,7 +10,8 @@
         loading-text="Carganado... Por favor espere."
       >
         <template v-slot:top>
-          <v-toolbar flat>
+          <v-toolbar flat
+            ><v-icon>mdi-account-multiple-outline</v-icon>
             <v-toolbar-title>Usuario</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -22,7 +23,7 @@
                   class="mb-2"
                   v-bind="attrs"
                   v-on="on"
-                >
+                  ><v-icon>mdi-plus</v-icon>
                   Agregar Usuario
                 </v-btn>
               </template>

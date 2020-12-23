@@ -10,8 +10,9 @@
         loading-text="Carganado... Por favor espere."
       >
         <template v-slot:top>
-          <v-toolbar flat>
-            <v-toolbar-title>Articulo</v-toolbar-title>
+          <v-toolbar flat
+            ><v-icon>mdi-basket</v-icon>
+            <v-toolbar-title> Articulo</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog" max-width="500px">
@@ -22,7 +23,7 @@
                   class="mb-2"
                   v-bind="attrs"
                   v-on="on"
-                >
+                  ><v-icon>mdi-plus</v-icon>
                   Agregar Articulo
                 </v-btn>
               </template>
@@ -125,10 +126,7 @@
         </template>
       </v-data-table>
     </v-app>
-    <pre>
-    {{ $data.articulo }}
-  </pre
-    >
+    <pre>{{ articulo }}</pre>
   </div>
 </template>
 <script>

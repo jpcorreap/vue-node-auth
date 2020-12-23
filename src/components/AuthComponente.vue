@@ -1,33 +1,21 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Sprint 5 - Grupo 1</v-toolbar-title>
-      <v-spacer>
-        <v-btn icon class="mr-5" @click="salir()"
-          ><v-icon>mdi-logout</v-icon>
-          <span>Salir</span>
-        </v-btn>
-      </v-spacer>
-    </v-app-bar>
-
-    <v-navigation-drawer v-model="drawer" fixed temporary>
+    <v-navigation-drawer v-model="drawer" app>
       <v-app id="inspire">
         <v-card class="mx-auto" width="300">
           <v-list>
             <v-list-item :to="{ name: 'Home' }">
               <v-list-item-icon>
-                <v-icon>mdi-home</v-icon>
+                <v-icon>mdi-home-account</v-icon>
               </v-list-item-icon>
 
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item>
 
-            <v-list-group :value="false" prepend-icon="mdi-account-circle">
+            <v-list-group :value="false" prepend-icon="mdi-account-check">
               <template v-slot:activator>
                 <v-list-item-content>
-                  <v-list-item-title>Admin</v-list-item-title>
+                  <v-list-item-title>Administrador</v-list-item-title>
                 </v-list-item-content>
               </template>
 
@@ -43,12 +31,26 @@
                 </v-list-item-icon>
               </v-list-item>
             </v-list-group>
+
+            <v-list-item @click="salir()">
+              <v-list-item-icon>
+                <v-icon>mdi-logout</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-title>Salir</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-card>
       </v-app>
     </v-navigation-drawer>
 
-    <v-main class="grey darken-3">
+    <v-app-bar app>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-toolbar-title>Proyecto Final Ciclo3</v-toolbar-title>
+    </v-app-bar>
+
+    <v-main>
       <v-container>
         <router-view />
       </v-container>
@@ -57,6 +59,7 @@
 </template>
 
 <script>
+import swal from "sweetalert";
 export default {
   name: "AuthComponen",
 
@@ -66,9 +69,9 @@ export default {
     //
     drawer: null,
     admins: [
-      ["Categoria", "mdi-plus-outline", "Categoria"],
-      ["Articulo", "mdi-cog-outline", "Articulo"],
-      ["Usuario", "mdi-account-multiple-outline", "Usuario"],
+      ["Categorias", "mdi-select-group", "Categoria"],
+      ["Articulos", "mdi-basket", "Articulo"],
+      ["Usuarios", "mdi-account-multiple-outline", "Usuario"],
     ],
     created() {
       this.store.dispatch("autoLogin");
@@ -76,6 +79,7 @@ export default {
   }),
   methods: {
     salir() {
+      swal("Gracias por visitarnos", "Vuelve pronto");
       this.$store.dispatch("salir");
     },
   },

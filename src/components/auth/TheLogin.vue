@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center>
-    <v-card elevation="20" height="370" style="margin-top: 100px">
+    <v-card outlined="true" height="370" style="margin-top: 100px">
       <v-card-title>LOGIN</v-card-title>
       <v-card-text>
         <v-form>
@@ -15,6 +15,7 @@
 
             <v-col cols="12">
               <v-text-field
+                icon=""
                 v-model="login.password"
                 :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show ? 'text' : 'password'"

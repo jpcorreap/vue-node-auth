@@ -11,7 +11,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat
-            ><v-icon>mdi-select-group</v-icon>
+            ><v-icon>mdi-view-dashboard</v-icon>
             <v-toolbar-title> Categorias</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>

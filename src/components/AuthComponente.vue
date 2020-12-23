@@ -69,7 +69,7 @@ export default {
     //
     drawer: null,
     admins: [
-      ["Categorias", "mdi-select-group", "Categoria"],
+      ["Categorias", "mdi-view-dashboard", "Categoria"],
       ["Articulos", "mdi-basket", "Articulo"],
       ["Usuarios", "mdi-account-multiple-outline", "Usuario"],
     ],

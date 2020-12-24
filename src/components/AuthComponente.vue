@@ -31,7 +31,7 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Proyecto Final Ciclo3</v-toolbar-title>
+      <v-toolbar-title>J&J Consulting Manager</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
@@ -51,7 +51,7 @@ export default {
 
   data: () => ({
     //
-    drawer: null,
+    drawer: true,
     admins: [
       ["Home", "mdi-home-account", "Home"],
       ["Categorias", "mdi-view-dashboard", "Categoria"],

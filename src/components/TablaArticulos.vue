@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <v-app>
       <v-data-table
         :headers="headers"
@@ -139,7 +139,6 @@
         </template>
       </v-data-table>
     </v-app>
-    <pre>{{ articulo }}</pre>
   </div>
 </template>
 <script>
@@ -345,4 +344,7 @@ export default {
 };
 </script>
 <style>
+.container {
+  margin-top: -100px;
+}
 </style>

@@ -125,8 +125,8 @@
             mdi-pencil
           </v-icon>
           <v-icon medium @click="deleteItem(item)">
-            <template v-if="item.estado">mdi-toggle-switch</template>
-            <template v-else>mdi-toggle-switch-off-outline</template>
+            <template v-if="item.estado">mdi-window-close</template>
+            <template v-else>check</template>
           </v-icon>
         </template>
         <template v-slot:no-data>
@@ -209,7 +209,7 @@ export default {
   methods: {
     list() {
       axios
-        .get("http://localhost:3000/api/usuario/list")
+        .get("https://node-p5.herokuapp.com/api/usuario/list")
         .then((response) => {
           this.cargando = false;
           this.usuarios = response.data;
@@ -236,7 +236,7 @@ export default {
     deleteItemConfirm() {
       if (this.editedItem.estado === 1) {
         axios
-          .put("http://localhost:3000/api/usuario/deactivate", {
+          .put("https://node-p5.herokuapp.com/api/usuario/deactivate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -247,7 +247,7 @@ export default {
           });
       } else {
         axios
-          .put("http://localhost:3000/api/usuario/activate", {
+          .put("https://node-p5.herokuapp.com/api/usuario/activate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -279,7 +279,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("http://localhost:3000/api/usuario/update", {
+          .put("https://node-p5.herokuapp.com/api/usuario/update", {
             id: this.editedItem.id,
             nombre: this.editedItem.nombre,
             email: this.editedItem.email,
@@ -293,7 +293,7 @@ export default {
           });
       } else {
         axios
-          .post("http://localhost:3000/api/usuario/add", {
+          .post("https://node-p5.herokuapp.com/api/usuario/add", {
             nombre: this.editedItem.nombre,
             email: this.editedItem.email,
             password: this.editedItem.password,

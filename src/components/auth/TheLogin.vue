@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center>
-    <v-card elevation="20" height="370" style="margin-top: 100px">
+    <v-card outlined="true" height="370" style="margin-top: 100px">
       <v-card-title>LOGIN</v-card-title>
       <v-card-text>
         <v-form>
@@ -15,6 +15,7 @@
 
             <v-col cols="12">
               <v-text-field
+                icon=""
                 v-model="login.password"
                 :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show ? 'text' : 'password'"
@@ -64,7 +65,7 @@ export default {
   methods: {
     loginUser() {
       axios
-        .post("http://localhost:3000/api/usuario/login", this.login)
+        .post("https://node-p5.herokuapp.com/api/usuario/login", this.login)
         .then((response) => {
           return response.data;
         })

@@ -11,7 +11,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat
-            ><v-icon>mdi-select-group</v-icon>
+            ><v-icon>mdi-view-dashboard</v-icon>
             <v-toolbar-title> Categorias</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -101,8 +101,8 @@
             mdi-pencil
           </v-icon>
           <v-icon medium @click="deleteItem(item)">
-            <template v-if="item.estado">mdi-electric-switch-closed</template>
-            <template v-else>mdi-electric-switch</template>
+            <template v-if="item.estado">mdi-window-close</template>
+            <template v-else>check</template>
           </v-icon>
         </template>
         <template v-slot:no-data>
@@ -170,7 +170,7 @@ export default {
   methods: {
     list() {
       axios
-        .get("http://localhost:3000/api/categoria/list", {
+        .get("https://node-p5.herokuapp.com/api/categoria/list", {
           headers: {
             token: this.$store.state.token,
           },
@@ -199,7 +199,7 @@ export default {
     deleteItemConfirm() {
       if (this.editedItem.estado === 1) {
         axios
-          .put("http://localhost:3000/api/categoria/deactivate", {
+          .put("https://node-p5.herokuapp.com/api/categoria/deactivate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -210,7 +210,7 @@ export default {
           });
       } else {
         axios
-          .put("http://localhost:3000/api/categoria/activate", {
+          .put("https://node-p5.herokuapp.com/api/categoria/activate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -242,7 +242,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("http://localhost:3000/api/categoria/update", {
+          .put("https://node-p5.herokuapp.com/api/categoria/update", {
             id: this.editedItem.id,
             nombre: this.editedItem.nombre,
             descripcion: this.editedItem.descripcion,
@@ -255,7 +255,7 @@ export default {
           });
       } else {
         axios
-          .post("http://localhost:3000/api/categoria/add", {
+          .post("https://node-p5.herokuapp.com/api/categoria/add", {
             nombre: this.editedItem.nombre,
             descripcion: this.editedItem.descripcion,
             estado: 1,

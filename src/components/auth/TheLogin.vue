@@ -71,11 +71,11 @@ export default {
         })
         .then((data) => {
           this.$store.dispatch("guardarToken", data.tokenReturn);
-          swal("Muy bien", "Haz ingresado", "success");
+          swal("¡Muy bien!", "Has ingresado con éxito", "success");
           this.$router.push({ name: "Auth" });
         })
         .catch((error) => {
-          swal("Ohhhhh noooo!!!", "Revisa tus credenciales", "error");
+          swal("Credenciales inválidas", "Usuario o contraseña incorrecta", "error");
           return error;
         });
     },

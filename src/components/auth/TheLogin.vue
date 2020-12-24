@@ -65,7 +65,7 @@ export default {
   methods: {
     loginUser() {
       axios
-        .post("http://localhost:3000/api/usuario/login", this.login)
+        .post("https://node-p5.herokuapp.com/api/usuario/login", this.login)
         .then((response) => {
           return response.data;
         })

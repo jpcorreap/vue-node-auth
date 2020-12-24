@@ -4,33 +4,17 @@
       <v-app id="inspire">
         <v-card class="mx-auto" width="300">
           <v-list>
-            <v-list-item :to="{ name: 'Home' }">
+            <v-list-item
+              v-for="([title, icon, ruta], i) in admins"
+              :key="i"
+              :to="{ name: ruta }"
+            >
+              <v-list-item-title v-text="title"></v-list-item-title>
+
               <v-list-item-icon>
-                <v-icon>mdi-home-account</v-icon>
+                <v-icon v-text="icon"></v-icon>
               </v-list-item-icon>
-
-              <v-list-item-title>Home</v-list-item-title>
             </v-list-item>
-
-            <v-list-group :value="false" prepend-icon="mdi-account-check">
-              <template v-slot:activator>
-                <v-list-item-content>
-                  <v-list-item-title>Administrador</v-list-item-title>
-                </v-list-item-content>
-              </template>
-
-              <v-list-item
-                v-for="([title, icon, ruta], i) in admins"
-                :key="i"
-                :to="{ name: ruta }"
-              >
-                <v-list-item-title v-text="title"></v-list-item-title>
-
-                <v-list-item-icon>
-                  <v-icon v-text="icon"></v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-            </v-list-group>
 
             <v-list-item @click="salir()">
               <v-list-item-icon>
@@ -69,6 +53,7 @@ export default {
     //
     drawer: null,
     admins: [
+      ["Home", "mdi-home-account", "Home"],
       ["Categorias", "mdi-view-dashboard", "Categoria"],
       ["Articulos", "mdi-basket", "Articulo"],
       ["Usuarios", "mdi-account-multiple-outline", "Usuario"],

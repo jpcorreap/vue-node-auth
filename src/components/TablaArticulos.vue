@@ -35,7 +35,7 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="12">
+                      <v-col cols="12" sm="6" md="5">
                         <v-text-field
                           v-model="editedItem.codigo"
                           label="Código"
@@ -45,6 +45,19 @@
                         <v-text-field
                           v-model="editedItem.nombre"
                           label="Nombre"
+                        ></v-text-field>
+                      </v-col>
+
+                      <v-col cols="12">
+                        <v-text-field
+                          v-model="editedItem.foto"
+                          label="Foto"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="5">
+                        <v-text-field
+                          v-model="editedItem.precio"
+                          label="Precio"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="7">
@@ -147,6 +160,7 @@ export default {
       },
       { text: "Descripción", value: "descripcion" },
       { text: "Categoria", value: "Categoria.nombre" },
+      { text: "Precio", value: "precio" },
       { text: "Estado", value: "estado" },
       ,
       { text: "Acción", value: "actions", sortable: false },
@@ -162,6 +176,8 @@ export default {
       descripcion: "",
       estado: 0,
       codigo: "",
+      foto: "",
+      precio: 0,
       CategoriaId: {
         nombre: "",
         id: 0,
@@ -172,6 +188,8 @@ export default {
       descripcion: "",
       estado: 0,
       codigo: "",
+      precio: 0,
+      foto: "",
       CategoriaId: {
         nombre: "",
         id: 0,
@@ -207,7 +225,7 @@ export default {
   methods: {
     list() {
       axios
-        .get("http://localhost:3000/api/articulo/list")
+        .get("https://node-p5.herokuapp.com/api/articulo/list")
         .then((response) => {
           this.cargando = false;
           this.articulo = response.data;
@@ -219,7 +237,7 @@ export default {
 
     listCategoria() {
       axios
-        .get("http://localhost:3000/api/categoria/list")
+        .get("https://node-p5.herokuapp.com/api/categoria/list")
         .then((response) => {
           this.categorias = response.data;
         })
@@ -244,7 +262,7 @@ export default {
     deleteItemConfirm() {
       if (this.editedItem.estado === 1) {
         axios
-          .put("http://localhost:3000/api/articulo/deactivate", {
+          .put("https://node-p5.herokuapp.com/api/articulo/deactivate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -255,7 +273,7 @@ export default {
           });
       } else {
         axios
-          .put("http://localhost:3000/api/articulo/activate", {
+          .put("https://node-p5.herokuapp.com/api/articulo/activate", {
             id: this.editedItem.id,
           })
           .then((response) => {
@@ -288,12 +306,14 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("http://localhost:3000/api/articulo/update", {
+          .put("https://node-p5.herokuapp.com/api/articulo/update", {
             id: this.editedItem.id,
             nombre: this.editedItem.nombre,
             descripcion: this.editedItem.descripcion,
             codigo: this.editedItem.codigo,
             categoriaId: this.categoria.id,
+            foto: this.editedItem.foto,
+            precio: this.editedItem.precio,
           })
           .then((response) => {
             this.list();
@@ -303,12 +323,14 @@ export default {
           });
       } else {
         axios
-          .post("http://localhost:3000/api/articulo/add", {
+          .post("https://node-p5.herokuapp.com/api/articulo/add", {
             nombre: this.editedItem.nombre,
             descripcion: this.editedItem.descripcion,
             estado: 1,
             codigo: this.editedItem.codigo,
             categoriaId: this.categoria.id,
+            foto: this.editedItem.foto,
+            precio: this.editedItem.precio,
           })
           .then((response) => {
             this.list();
